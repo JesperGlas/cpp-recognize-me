@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.16)
 
 # Set project parameters
 project(
-    "cpp-template"
+    "cpp-recognize-me"
     VERSION 1.0
     LANGUAGES CXX
 )
@@ -42,7 +42,17 @@ add_subdirectory(tests)
 add_executable(
     ${PROJECT_NAME}
     ${SOURCE}/main.cpp
+    ${SOURCE}/CaptureDevice.cpp
 )
+
+# Dependencies
+find_package( OpenCV REQUIRED )
+if (!OpenCV_FOUND)
+    message(ERROR "OpenCV not found!")
+else()
+    message(STATUS "OpenCV found!")
+    include_directories(${OpenCV_INCLUDE_DIRS})
+endif()
 
 # Set main target include directories
 target_include_directories(
@@ -50,4 +60,11 @@ target_include_directories(
     PUBLIC
         ${PROJECT_BINARY_DIR}
         ${INCLUDE}
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(
+    ${PROJECT_NAME}
+    PUBLIC
+        ${OpenCV_LIBS}
 )
